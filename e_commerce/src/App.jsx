@@ -1,34 +1,20 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import Navbar from './components/Navbar'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+    <div className="min-h-screen bg-[#F5F5F5] text-white">
+      <Navbar />
+      <main className="pt-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <h1 className="mt-10 text-3xl font-semibold tracking-tight">
+          Welcome to your e-commerce MVP
+        </h1>
+        <p className="mt-3 max-w-xl text-sm text-[#000000]">
+          This is your starting point for a premium storefront experience. Add
+          hero sections, product grids, and more beneath this navbar.
         </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      </main>
+    </div>
   )
 }
 
