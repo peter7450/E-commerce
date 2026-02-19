@@ -5,6 +5,7 @@ import {
   HiOutlineShoppingBag,
   HiOutlineMenuAlt3,
   HiOutlineX,
+  HiOutlineGlobe,
 } from 'react-icons/hi'
 
 const navLinks = [
@@ -17,12 +18,13 @@ const navLinks = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [regionOpen, setRegionOpen] = useState(false)
 
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 z-40">
+      <nav className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#1B1B1B] text-slate-100 shadow-lg backdrop-blur-lg">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 pt-4 sm:px-6">
-          <div className="flex h-12 flex-1 items-center justify-between border border-white/10 bg-slate-900/70 px-4 text-slate-100 shadow-lg backdrop-blur-lg sm:px-6">
+          <div className="flex h-12 flex-1 items-center justify-between sm:px-6">
             {/* Left: Logo */}
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs font-semibold text-slate-900">
@@ -47,8 +49,50 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Right: Icons / mobile controls */}
-            <div className="flex items-center gap-2">
+            {/* Right: Region selector + Icons / mobile controls */}
+            <div className="relative flex items-center gap-2">
+              {/* Desktop: Region & Language selector */}
+              <div className="hidden md:block">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium tracking-[0.08em] text-slate-200 hover:bg-white/10"
+                  onClick={() => setRegionOpen((open) => !open)}
+                  aria-haspopup="true"
+                  aria-expanded={regionOpen}
+                >
+                  <HiOutlineGlobe className="h-4 w-4" />
+                  <span>EN / NGN</span>
+                </button>
+
+                {regionOpen && (
+                  <div className="absolute right-20 top-12 w-56 rounded-2xl border border-white/10 bg-[#1B1B1B] p-3 text-xs text-slate-100 shadow-xl backdrop-blur-lg">
+                    <p className="mb-2 text-[11px] uppercase tracking-[0.16em] text-slate-400">
+                      Region &amp; Currency
+                    </p>
+                    <ul className="space-y-1.5">
+                      <li>
+                        <button className="flex w-full items-center justify-between rounded-xl px-2 py-1.5 text-left hover:bg-white/10">
+                          <span>Nigeria</span>
+                          <span className="text-slate-300">NGN</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button className="flex w-full items-center justify-between rounded-xl px-2 py-1.5 text-left hover:bg-white/10">
+                          <span>United States</span>
+                          <span className="text-slate-300">USD</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button className="flex w-full items-center justify-between rounded-xl px-2 py-1.5 text-left hover:bg-white/10">
+                          <span>United Kingdom</span>
+                          <span className="text-slate-300">GBP</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+
               {/* Desktop: search + user */}
               <button
                 type="button"
@@ -95,8 +139,8 @@ export default function Navbar() {
 
       {/* Mobile full-screen menu */}
       {menuOpen && (
-        <div className="fixed inset-0 z-30 bg-slate-950/90 backdrop-blur-lg md:hidden">
-          <div className="mx-auto flex h-full max-w-6xl flex-col px-6 pt-24 pb-10">
+        <div className="fixed inset-0 z-30 bg-[#1B1B1B] backdrop-blur-lg md:hidden">
+          <div className="mx-auto flex h-full max-w-6xl flex-col px-6 pt-24 pb-6">
             <nav className="space-y-4 text-lg font-medium text-slate-100">
               {navLinks.map((link) => (
                 <a
@@ -109,6 +153,25 @@ export default function Navbar() {
                 </a>
               ))}
             </nav>
+
+            {/* Mobile: Region & Language block at bottom */}
+            <div className="mt-auto pt-6 text-xs text-slate-300">
+              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4 backdrop-blur-lg">
+                <div className="mb-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-slate-400">
+                  <HiOutlineGlobe className="h-4 w-4" />
+                  <span>Region &amp; Language</span>
+                </div>
+                <div className="space-y-1.5 text-slate-100">
+                  <div className="flex items-center justify-between rounded-xl bg-white/5 px-2 py-1.5">
+                    <span className="text-xs">Nigeria</span>
+                    <span className="text-xs text-slate-200">EN / NGN</span>
+                  </div>
+                  <p className="pt-1 text-[11px] text-slate-400">
+                    Change your region and currency in settings (coming soon).
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
