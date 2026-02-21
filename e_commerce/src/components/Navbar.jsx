@@ -7,6 +7,7 @@ import {
   HiOutlineX,
   HiOutlineGlobe,
 } from 'react-icons/hi'
+import { useCart } from '../context/CartContext.jsx'
 
 const navLinks = [
   { label: 'Men', href: '/men' },
@@ -19,12 +20,13 @@ const navLinks = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [regionOpen, setRegionOpen] = useState(false)
+  const { totalQuantity } = useCart()
 
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#1B1B1B] text-slate-100 shadow-lg backdrop-blur-lg">
+      <nav className="fixed inset-x-0 top-0 z-40">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 pt-4 sm:px-6">
-          <div className="flex h-12 flex-1 items-center justify-between sm:px-6">
+          <div className="flex h-12 flex-1 items-center justify-between rounded-full border border-white/10 bg-slate-900/70 px-4 text-slate-100 shadow-lg backdrop-blur-lg sm:px-6">
             {/* Left: Logo */}
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs font-semibold text-slate-900">
@@ -65,7 +67,7 @@ export default function Navbar() {
                 </button>
 
                 {regionOpen && (
-                  <div className="absolute right-20 top-12 w-56 rounded-2xl border border-white/10 bg-[#1B1B1B] p-3 text-xs text-slate-100 shadow-xl backdrop-blur-lg">
+                  <div className="absolute right-20 top-12 w-56 rounded-2xl border border-white/10 bg-slate-900/70 p-3 text-xs text-slate-100 shadow-xl backdrop-blur-lg">
                     <p className="mb-2 text-[11px] uppercase tracking-[0.16em] text-slate-400">
                       Region &amp; Currency
                     </p>
@@ -112,10 +114,15 @@ export default function Navbar() {
               {/* Shopping bag (always visible) */}
               <button
                 type="button"
-                className="rounded-full p-1.5 hover:bg-white/10"
-                aria-label="Shopping bag"
+                className="relative rounded-full p-1.5 hover:bg-white/10"
+                aria-label={`Shopping bag${totalQuantity > 0 ? ` (${totalQuantity} items)` : ''}`}
               >
                 <HiOutlineShoppingBag className="h-5 w-5" />
+                {totalQuantity > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[10px] font-bold text-slate-900">
+                    {totalQuantity > 99 ? '99+' : totalQuantity}
+                  </span>
+                )}
               </button>
 
               {/* Mobile: hamburger */}
@@ -139,7 +146,7 @@ export default function Navbar() {
 
       {/* Mobile full-screen menu */}
       {menuOpen && (
-        <div className="fixed inset-0 z-30 bg-[#1B1B1B] backdrop-blur-lg md:hidden">
+        <div className="fixed inset-0 z-30 bg-slate-950/90 backdrop-blur-lg md:hidden">
           <div className="mx-auto flex h-full max-w-6xl flex-col px-6 pt-24 pb-6">
             <nav className="space-y-4 text-lg font-medium text-slate-100">
               {navLinks.map((link) => (
