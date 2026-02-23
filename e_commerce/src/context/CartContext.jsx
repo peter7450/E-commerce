@@ -7,10 +7,13 @@ export function CartProvider({ children }) {
 
   function addToCart(product) {
     setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id)
+      const variantKey = (item) =>
+        `${item.id}-${item.selectedColor || ''}-${item.selectedSize || ''}`
+      const newKey = variantKey(product)
+      const existing = prev.find((item) => variantKey(item) === newKey)
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id
+          variantKey(item) === newKey
             ? { ...item, quantity: item.quantity + 1 }
             : item
         )

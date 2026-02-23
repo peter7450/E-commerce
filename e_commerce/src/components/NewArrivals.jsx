@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { HiOutlineShoppingBag, HiOutlineHeart, HiOutlineCheck } from 'react-icons/hi'
 import { useCart } from '../context/CartContext.jsx'
 
@@ -101,6 +102,7 @@ export default function NewArrivals() {
               }`}
             >
               {/* Image container */}
+              <Link to={`/product/${product.id}`} className="block">
               <div className="relative w-full overflow-hidden bg-black">
                 <div className="aspect-[3/4] w-full">
                   {/* Primary image */}
@@ -121,7 +123,11 @@ export default function NewArrivals() {
                 <div className="absolute inset-x-0 bottom-0 flex translate-y-full gap-2 p-3 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
                   <button
                     type="button"
-                    onClick={() => handleAddToCart(product)}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      handleAddToCart(product)
+                    }}
                     className="flex flex-1 items-center justify-center gap-2 border border-white bg-white px-4 py-2.5 text-sm font-bold text-black transition-colors hover:bg-black hover:text-white"
                   >
                     {justAddedId === product.id ? (
@@ -145,12 +151,13 @@ export default function NewArrivals() {
                   </button>
                 </div>
               </div>
+              </Link>
 
               {/* Card details - bold, minimal, raw */}
               <div className="mt-3">
-                <h3 className="font-bold tracking-tight text-white">
+                <Link to={`/product/${product.id}`} className="font-bold tracking-tight text-white hover:text-slate-300">
                   {product.name}
-                </h3>
+                </Link>
                 <p className="mt-1 text-sm font-bold text-slate-400">
                   {product.price}
                 </p>
