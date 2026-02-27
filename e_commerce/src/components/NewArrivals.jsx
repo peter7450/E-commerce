@@ -67,10 +67,12 @@ export default function NewArrivals() {
 
   function handleAddToCart(product) {
     addToCart({
-      id: product.id,
+      id: String(product.id),
       name: product.name,
       price: product.price,
       image: product.imagePrimary,
+      selectedColor: null,
+      selectedSize: null,
     })
     setJustAddedId(product.id)
     setTimeout(() => setJustAddedId(null), 1500)

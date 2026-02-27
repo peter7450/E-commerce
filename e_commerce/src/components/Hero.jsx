@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const slides = [
   {
@@ -27,36 +27,40 @@ const slides = [
   },
 ]
 
+const SLIDE_DURATION = 5000 // ms
+const TICK_INTERVAL = 100  // ms
+const STEP = 100 / (SLIDE_DURATION / TICK_INTERVAL) // increment per tick
+
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [progress, setProgress] = useState(0)
+  // Refs let the single interval read the latest slide index without re-running
+  const progressRef = useRef(0)
+  const slideRef = useRef(0)
 
   useEffect(() => {
-    // Reset progress when slide changes
-    setProgress(0)
+    const interval = setInterval(() => {
+      const next = progressRef.current + STEP
 
-    // Progress bar animation
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          return 0
-        }
-        return prev + (100 / 70) // 70 steps over 7 seconds (100ms per step)
-      })
-    }, 100)
+      if (next >= 100) {
+        // Advance slide, reset progress
+        const nextSlide = (slideRef.current + 1) % slides.length
+        slideRef.current = nextSlide
+        progressRef.current = 0
+        setCurrentSlide(nextSlide)
+        setProgress(0)
+      } else {
+        progressRef.current = next
+        setProgress(next)
+      }
+    }, TICK_INTERVAL)
 
-    // Auto-advance slide every 7 seconds
-    const slideInterval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length)
-    }, 7000)
-
-    return () => {
-      clearInterval(progressInterval)
-      clearInterval(slideInterval)
-    }
-  }, [currentSlide])
+    return () => clearInterval(interval)
+  }, []) // runs once on mount — never torn down by slide changes
 
   const goToSlide = (index) => {
+    slideRef.current = index
+    progressRef.current = 0
     setCurrentSlide(index)
     setProgress(0)
   }
