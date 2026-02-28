@@ -7,6 +7,8 @@ import {
   HiOutlineMenuAlt3,
   HiOutlineX,
   HiOutlineGlobe,
+  HiOutlineHeart,
+  HiHeart,
 } from 'react-icons/hi'
 import { useCart } from '../context/CartContext.jsx'
 
@@ -38,7 +40,7 @@ export default function Navbar() {
   const [regionOpen, setRegionOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const { totalQuantity } = useCart()
+  const { totalQuantity, setIsCartOpen, wishlistItems } = useCart()
   const navigate = useNavigate()
   const searchContainerRef = useRef(null)
   const inputRef = useRef(null)
@@ -248,6 +250,24 @@ export default function Navbar() {
                 }
               </button>
 
+              {/* Wishlist */}
+              <Link
+                to="/wishlist"
+                className="relative hidden rounded-full p-1.5 hover:bg-white/10 md:inline-flex"
+                aria-label={`Wishlist${wishlistItems.length > 0 ? ` (${wishlistItems.length} items)` : ''}`}
+              >
+                {wishlistItems.length > 0 ? (
+                  <HiHeart className="h-5 w-5 text-red-400" />
+                ) : (
+                  <HiOutlineHeart className="h-5 w-5" />
+                )}
+                {wishlistItems.length > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+                    {wishlistItems.length > 9 ? '9+' : wishlistItems.length}
+                  </span>
+                )}
+              </Link>
+
               {/* User */}
               <button
                 type="button"
@@ -260,6 +280,7 @@ export default function Navbar() {
               {/* Shopping bag */}
               <button
                 type="button"
+                onClick={() => setIsCartOpen(true)}
                 className="relative rounded-full p-1.5 hover:bg-white/10"
                 aria-label={`Shopping bag${totalQuantity > 0 ? ` (${totalQuantity} items)` : ''}`}
               >

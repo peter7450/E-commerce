@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { HiOutlineShoppingBag, HiOutlineHeart, HiOutlineCheck } from 'react-icons/hi'
+import { HiOutlineShoppingBag, HiOutlineCheck } from 'react-icons/hi'
 import { useCart } from '../context/CartContext.jsx'
+import WishlistButton from './Wishlistbutton.jsx'
 
 const products = [
   {
@@ -144,13 +145,15 @@ export default function NewArrivals() {
                       </>
                     )}
                   </button>
-                  <button
-                    type="button"
+                  <WishlistButton
+                    product={{
+                      id: String(product.id),
+                      name: product.name,
+                      price: product.price,
+                      image: product.imagePrimary,
+                    }}
                     className="flex h-11 w-11 shrink-0 items-center justify-center border border-white bg-white text-black transition-colors hover:bg-black hover:text-white"
-                    aria-label="Add to wishlist"
-                  >
-                    <HiOutlineHeart className="h-5 w-5" />
-                  </button>
+                  />
                 </div>
               </div>
               </Link>

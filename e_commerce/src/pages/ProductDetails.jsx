@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { HiOutlineHeart, HiOutlineCheck } from 'react-icons/hi'
+import { HiOutlineCheck } from 'react-icons/hi'
 import Navbar from '../components/Navbar'
 import { useCart } from '../context/CartContext'
+import WishlistButton from '../components/Wishlistbutton'
 
 // Mock product data - in production, fetch by id/slug from API
 const PRODUCTS = {
@@ -242,13 +243,18 @@ export default function ProductDetails() {
               >
                 Add to Cart
               </button>
-              <button
-                type="button"
+              <WishlistButton
+                product={{
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  image: images[0],
+                  selectedColor: currentColor.name,
+                  selectedSize,
+                }}
+                showLabel
                 className="flex items-center justify-center gap-2 border border-slate-600 px-6 py-4 text-sm font-bold tracking-tight text-slate-200 transition-colors hover:border-slate-500 hover:text-white"
-              >
-                <HiOutlineHeart className="h-5 w-5" />
-                Add to Wishlist
-              </button>
+              />
             </div>
 
             {/* Accordion */}
