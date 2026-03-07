@@ -6,7 +6,9 @@ import ProductDetails from './pages/ProductDetails'
 import Wishlist from './pages/Wishlist'
 import Checkout from './pages/Checkout'
 import OrderSuccess from './pages/OrderSuccess'
+import Login from './pages/Login'
 import CartDrawer from './components/CartDrawer'
+import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
 
 function HomePage() {
@@ -29,7 +31,15 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/success" element={<OrderSuccess />} />
         </Routes>
         <CartDrawer />

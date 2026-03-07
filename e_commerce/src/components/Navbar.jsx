@@ -9,8 +9,10 @@ import {
   HiOutlineGlobe,
   HiOutlineHeart,
   HiHeart,
+  HiOutlineLogout,
 } from 'react-icons/hi'
 import { useCart } from '../context/CartContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 
 const navLinks = [
   { label: 'Men', href: '/men' },
@@ -40,10 +42,13 @@ export default function Navbar() {
   const [regionOpen, setRegionOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const { totalQuantity, setIsCartOpen, wishlistItems } = useCart()
+  const { isAuthenticated, currentUser, logout } = useAuth()
   const navigate = useNavigate()
   const searchContainerRef = useRef(null)
   const inputRef = useRef(null)
+  const userMenuRef = useRef(null)
 
   const filtered = searchQuery.trim().length > 0
     ? SEARCH_PRODUCTS.filter(
@@ -56,11 +61,14 @@ export default function Navbar() {
   const shown = filtered.slice(0, MAX_SHOWN)
   const hasMore = filtered.length > MAX_SHOWN
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(e) {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
         setSearchOpen(false)
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -269,13 +277,47 @@ export default function Navbar() {
               </Link>
 
               {/* User */}
-              <button
-                type="button"
-                className="hidden rounded-full p-1.5 hover:bg-white/10 md:inline-flex"
-                aria-label="Account"
-              >
-                <HiOutlineUser className="h-5 w-5" />
-              </button>
+              <div className="relative hidden md:block" ref={userMenuRef}>
+                {isAuthenticated ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setUserMenuOpen((o) => !o)}
+                      className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-bold text-slate-900 transition-opacity hover:opacity-80"
+                      aria-label="Account menu"
+                      aria-expanded={userMenuOpen}
+                    >
+                      {currentUser.email.slice(0, 1).toUpperCase()}
+                    </button>
+
+                    {userMenuOpen && (
+                      <div className="absolute right-0 top-full mt-3 w-56 rounded-2xl border border-white/10 bg-slate-900/95 p-3 shadow-2xl backdrop-blur-xl">
+                        <p className="truncate px-2 pb-2 text-[11px] text-slate-400">
+                          {currentUser.email}
+                        </p>
+                        <div className="border-t border-white/5 pt-2">
+                          <button
+                            type="button"
+                            onClick={() => { logout(); setUserMenuOpen(false) }}
+                            className="flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-medium text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
+                          >
+                            <HiOutlineLogout className="h-4 w-4" />
+                            Sign Out
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="inline-flex rounded-full p-1.5 hover:bg-white/10"
+                    aria-label="Sign in"
+                  >
+                    <HiOutlineUser className="h-5 w-5" />
+                  </Link>
+                )}
+              </div>
 
               {/* Shopping bag */}
               <button
@@ -393,8 +435,39 @@ export default function Navbar() {
               ))}
             </nav>
 
+            {/* Mobile: Auth block */}
+            <div className="pt-6">
+              {isAuthenticated ? (
+                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-slate-900/70 px-4 py-3 backdrop-blur-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-bold text-slate-900">
+                      {currentUser.email.slice(0, 1).toUpperCase()}
+                    </div>
+                    <p className="max-w-[160px] truncate text-xs text-slate-300">{currentUser.email}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { logout(); setMenuOpen(false) }}
+                    className="flex items-center gap-1 text-xs text-slate-400 transition-colors hover:text-white"
+                  >
+                    <HiOutlineLogout className="h-4 w-4" />
+                    Sign out
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm font-medium text-slate-300 backdrop-blur-lg transition-colors hover:text-white"
+                >
+                  <HiOutlineUser className="h-4 w-4" />
+                  Sign In / Create Account
+                </Link>
+              )}
+            </div>
+
             {/* Mobile: Region & Language block at bottom */}
-            <div className="mt-auto pt-6 text-xs text-slate-300">
+            <div className="mt-auto pt-4 text-xs text-slate-300">
               <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4 backdrop-blur-lg">
                 <div className="mb-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-slate-400">
                   <HiOutlineGlobe className="h-4 w-4" />
